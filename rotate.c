@@ -3,12 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   rotate.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: blamotte <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: blamotte <blamotte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/15 02:58:16 by blamotte          #+#    #+#             */
-/*   Updated: 2025/12/15 02:59:41 by blamotte         ###   ########.fr       */
+/*   Updated: 2025/12/15 04:25:02 by blamotte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include "push_swap.h"
 
 void	rotate(t_stack **stack)
 {

@@ -3,12 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   reverse_rotate.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: blamotte <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: blamotte <blamotte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/15 03:00:21 by blamotte          #+#    #+#             */
-/*   Updated: 2025/12/15 03:05:41 by blamotte         ###   ########.fr       */
+/*   Updated: 2025/12/15 04:25:07 by blamotte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include "push_swap.h"
 
 void	rev_rotate(t_stack **stack)
 {

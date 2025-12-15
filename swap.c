@@ -3,12 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   swap.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: blamotte <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: blamotte <blamotte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/15 03:05:53 by blamotte          #+#    #+#             */
-/*   Updated: 2025/12/15 03:11:59 by blamotte         ###   ########.fr       */
+/*   Updated: 2025/12/15 04:24:49 by blamotte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include "push_swap.h"
 
 void	swap(t_stack *stack)
 {
@@ -34,12 +36,12 @@ void	sa(t_stack **a)
 void	sb(t_stack **b)
 {
 	swap(*b);
-	write(1,"sa\n", 3);
+	write(1, "sa\n", 3);
 }
 
 void	ss(t_stack **a, t_stack **b)
 {
 	swap(*a);
 	swap(*b);
-	write(1,"ss\n", 3);
+	write(1, "ss\n", 3);
 }
