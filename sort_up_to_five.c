@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   sort_up_to_five.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: blamotte <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/15 03:57:27 by blamotte          #+#    #+#             */
-/*   Updated: 2025/12/15 04:06:24 by blamotte         ###   ########.fr       */
+/*   Updated: 2025/12/17 23:36:33 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,20 +48,20 @@ t_stack	*get_min(t_stack *stack)
 	return (min);
 }
 
-void	sort_three(t_stack **a)
+void	sort_three(t_stack **a, t_list **instructions)
 {
 	t_stack	*max;
 
 	max = get_max(*a);
 	if (*a == max)
-		ra(a);
+		ra(a, instructions);
 	else if ((*a)->next == max)
-		rra(a);
+		rra(a, instructions);
 	if ((*a)->index > (*a)->next->index)
-		sa(a);
+		sa(a, instructions);
 }
 
-void	put_on_to_top(t_stack **a, t_stack *node)
+void	put_on_to_top(t_stack **a, t_stack *node, t_list **instructions)
 {
 	int		size;
 	int		i;
@@ -74,23 +74,23 @@ void	put_on_to_top(t_stack **a, t_stack *node)
 		tmp = tmp->next;
 	if (i <= size / 2)
 		while (*a != node)
-			ra(a);
+			ra(a, instructions);
 	else
 		while (*a != node)
-			rra(a);
+			rra(a, instructions);
 }
 
-void	sort_five(t_stack **a, t_stack **b)
+void	sort_five(t_stack **a, t_stack **b, t_list **instructions)
 {
 	t_stack	*min;
 
 	while (get_stack_size(*a) > 3)
 	{
 		min = get_min(*a);
-		put_on_to_top(a, min);
-		pb(a, b);
+		put_on_to_top(a, min, instructions);
+		pb(a, b, instructions);
 	}
-	sort_three(a);
+	sort_three(a, instructions);
 	while (*b)
-		pa(a, b);
+		pa(a, b, instructions);
 }

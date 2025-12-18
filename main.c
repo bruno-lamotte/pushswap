@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: blamotte <blamotte@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/12 17:22:33 by blamotte          #+#    #+#             */
-/*   Updated: 2025/12/15 06:10:51 by blamotte         ###   ########.fr       */
+/*   Updated: 2025/12/18 00:53:16 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,28 +51,45 @@ void	print_stack(t_stack *stack)
 			break ;
 	}
 }
+void	free_list(t_list *instructions)
+{
+	t_list	l;
+	t_list	previus;
 
+	if (!instructions)
+		return ;
+	while (l)
+	{
+		previus = l;
+		l = l->next;
+		free(previous);
+	}
+	free(lst);
+}
 void	push_swap(t_stack **a)
 {
 	int		size;
 	t_stack	*b;
+	t_list	*instructions;
 
+	instructions = NULL;
 	size = get_stack_size(*a);
 	b = NULL;
 	if (size <= 1)
 		return ;
 	if (size == 2)
-	{
 		if ((*a)->index > (*a)->next->index)
-			sa(a);
-	}
+			sa(a, &instructions);
 	else if (size == 3)
-		sort_three(a);
+		sort_three(a, &instructions);
 	else if (size <= 5)
-		sort_five(a, &b);
+		sort_five(a, &b, &instructions);
 	else
-		algo(a, &b);
+		algo(a, &b, &instructions);
 	free_stack(&b);
+	print_list(instructions);
+	free_list(instructions);
+	free(instructions);
 }
 
 int	main(int ac, char **av)
