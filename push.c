@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/15 03:13:58 by blamotte          #+#    #+#             */
-/*   Updated: 2025/12/29 21:08:32 by marvin           ###   ########.fr       */
+/*   Updated: 2025/12/30 03:02:28 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,29 +53,7 @@ void	push_node(t_stack **stack, t_stack *new_node)
 	}
 }
 
-// void	pa(t_stack **a, t_stack **b, t_list **instructions)
-// {
-// 	t_stack	*node;
-
-// 	if (!*b)
-// 		return ;
-// 	node = cut_node(b);
-// 	push_node(a, node);
-// 	ft_lstadd_back(&instructions, ft_lstnew("pa"));
-// }
-
-// void	pb(t_stack **a, t_stack **b, t_list **instructions)
-// {
-// 	t_stack	*node;
-
-// 	if (!*a)
-// 		return ;
-// 	node = cut_node(a);
-// 	push_node(b, node);
-// 	ft_lstadd_back(&instructions, ft_lstnew("pb"));
-// }
-
-void	pa(t_stack **a, t_stack **b)
+void	pa(t_stack **a, t_stack **b, t_list **instructions)
 {
 	t_stack	*node;
 
@@ -83,10 +61,10 @@ void	pa(t_stack **a, t_stack **b)
 		return ;
 	node = cut_node(b);
 	push_node(a, node);
-	write(1, "pa\n", 3);
+	ft_lstadd_back(instructions, ft_lstnew(ft_strdup("pa")));
 }
 
-void	pb(t_stack **a, t_stack **b)
+void	pb(t_stack **a, t_stack **b, t_list **instructions)
 {
 	t_stack	*node;
 
@@ -94,5 +72,27 @@ void	pb(t_stack **a, t_stack **b)
 		return ;
 	node = cut_node(a);
 	push_node(b, node);
-	write(1, "pb\n", 3);
+	ft_lstadd_back(instructions, ft_lstnew(ft_strdup("pb")));
 }
+
+// void	pa(t_stack **a, t_stack **b)
+// {
+// 	t_stack	*node;
+
+// 	if (!*b)
+// 		return ;
+// 	node = cut_node(b);
+// 	push_node(a, node);
+// 	write(1, "pa\n", 3);
+// }
+
+// void	pb(t_stack **a, t_stack **b)
+// {
+// 	t_stack	*node;
+
+// 	if (!*a)
+// 		return ;
+// 	node = cut_node(a);
+// 	push_node(b, node);
+// 	write(1, "pb\n", 3);
+// }

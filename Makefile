@@ -6,7 +6,7 @@
 #    By: marvin <marvin@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/10 18:42:33 by blamotte          #+#    #+#              #
-#    Updated: 2025/12/29 21:39:50 by marvin           ###   ########.fr        #
+#    Updated: 2025/12/30 02:07:35 by marvin           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,7 @@ RM          = rm -f
 
 SRC_FILES   = main.c parsing.c utils_lst.c \
               push.c swap.c rotate.c reverse_rotate.c \
-              algo.c sort_up_to_five.c
+              algo.c sort_up_to_five.c post_process.c
 
 OBJ_FILES   = $(SRC_FILES:.c=.o)
 

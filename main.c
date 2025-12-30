@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/12 17:22:33 by blamotte          #+#    #+#             */
-/*   Updated: 2025/12/29 21:33:46 by marvin           ###   ########.fr       */
+/*   Updated: 2025/12/30 03:02:28 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,49 +53,25 @@ void	print_stack(t_stack *stack)
 }
 void	free_list(t_list *instructions)
 {
-	t_list	*previus;
+	t_list	*tmp;
 
-	if (!instructions)
-		return ;
 	while (instructions)
 	{
-		previus = instructions;
-		instructions = instructions->next;
-		free(previus);
+		tmp = instructions->next;
+		if (instructions->content)
+			free(instructions->content);
+		free(instructions);
+		instructions = tmp;
 	}
-	free(instructions);
 }
-// void	push_swap(t_stack **a)
-// {
-// 	int		size;
-// 	t_stack	*b;
-// 	t_list	*instructions;
-
-// 	instructions = NULL;
-// 	size = get_stack_size(*a);
-// 	b = NULL;
-// 	if (size <= 1)
-// 		return ;
-// 	if (size == 2)
-// 		if ((*a)->index > (*a)->next->index)
-// 			sa(a, &instructions);
-// 	else if (size == 3)
-// 		sort_three(a, &instructions);
-// 	else if (size <= 5)
-// 		sort_five(a, &b, &instructions);
-// 	else
-// 		algo(a, &b, &instructions);
-// 	free_stack(&b);
-// 	print_list(instructions);
-// 	free_list(instructions);
-// 	free(instructions);
-// }
 
 void	push_swap(t_stack **a)
 {
 	int		size;
 	t_stack	*b;
+	t_list	*instructions;
 
+	instructions = NULL;
 	size = get_stack_size(*a);
 	b = NULL;
 	if (size <= 1)
@@ -103,16 +79,41 @@ void	push_swap(t_stack **a)
 	if (size == 2)
 	{
 		if ((*a)->index > (*a)->next->index)
-			sa(a);
+			sa(a, &instructions);
 	}
 	else if (size == 3)
-		sort_three(a);
+		sort_three(a, &instructions);
 	else if (size <= 5)
-		sort_five(a, &b);
+		sort_five(a, &b, &instructions);
 	else
-		algo(a, &b);
+		algo(a, &b, &instructions);
 	free_stack(&b);
+	print_list(instructions);
+	free_list(instructions);
 }
+
+// void	push_swap(t_stack **a)
+// {
+// 	int		size;
+// 	t_stack	*b;
+
+// 	size = get_stack_size(*a);
+// 	b = NULL;
+// 	if (size <= 1)
+// 		return ;
+// 	if (size == 2)
+// 	{
+// 		if ((*a)->index > (*a)->next->index)
+// 			sa(a);
+// 	}
+// 	else if (size == 3)
+// 		sort_three(a);
+// 	else if (size <= 5)
+// 		sort_five(a, &b);
+// 	else
+// 		algo(a, &b);
+// 	free_stack(&b);
+// }
 
 int	main(int ac, char **av)
 {

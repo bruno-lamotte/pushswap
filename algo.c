@@ -6,22 +6,26 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/15 04:16:10 by blamotte          #+#    #+#             */
-/*   Updated: 2025/12/30 00:57:11 by marvin           ###   ########.fr       */
+/*   Updated: 2025/12/30 02:48:51 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
-void k_sorting(t_stack **a, t_stack **b)
+void k_sorting(t_stack **a, t_stack **b, t_list **instructions)
 {
 	int chunk_size;
+	int initial_chunk;
     int threshold;
     int moved;
+    int total_size;
 
     threshold = 0;
-    chunk_size = get_stack_size(*a) / 20 + 7;
-    if (chunk_size < 1)
-        chunk_size = 1;
+    total_size = get_stack_size(*a);
+    chunk_size = total_size / 5;
+    if (chunk_size < 3)
+        chunk_size = 3;
+    initial_chunk = chunk_size;
     while (*a)
     {
         moved = 0;
@@ -29,21 +33,19 @@ void k_sorting(t_stack **a, t_stack **b)
         {
             if ((*a)->index <= threshold + chunk_size)
             {
-                pb(a, b);
+                pb(a, b, instructions);
                 if ((*b)->index <= threshold)
-                    rb(b); 
+                    rb(b, instructions); 
                 threshold++;
                 moved++;
             }
             else
-                ra(a);
+                ra(a, instructions);
         }
-        // if (chunk_size >= 5)
-        //     chunk_size -= 5;
-        // else
-        //     chunk_size /= 2;
-        // if (chunk_size < 1)
-        //     chunk_size = 1;
+        if (chunk_size > initial_chunk / 3 && chunk_size > 3)
+            chunk_size = chunk_size * 3 / 4;
+        else if (chunk_size > 1)
+            chunk_size--;
     }
 }
 
@@ -179,7 +181,7 @@ int find_insert_pos(t_stack **a, int value)
     return (min_pos);
 }
 
-void insert_sorted(t_stack **a, t_stack **b)
+void insert_sorted(t_stack **a, t_stack **b, t_list **instructions)
 {
     int size;
     int pos;
@@ -189,7 +191,7 @@ void insert_sorted(t_stack **a, t_stack **b)
         return ;
     if (!*a)
     {
-        pa(a, b);
+        pa(a, b, instructions);
         return ;
     }
     size = get_stack_size(*a);
@@ -199,7 +201,7 @@ void insert_sorted(t_stack **a, t_stack **b)
         moves = pos;
         while (moves > 0)
         {
-            ra(a);
+            ra(a, instructions);
             moves--;
         }
     }
@@ -208,14 +210,14 @@ void insert_sorted(t_stack **a, t_stack **b)
         moves = size - pos;
         while (moves > 0)
         {
-            rra(a);
+            rra(a, instructions);
             moves--;
         }
     }
-    pa(a, b);
+    pa(a, b, instructions);
 }
 
-void reintegrate(t_stack **a, t_stack **b, int threshold)
+void reintegrate(t_stack **a, t_stack **b, int threshold, t_list **instructions)
 {
     t_stack *current;
     t_stack *best_target;
@@ -248,19 +250,19 @@ void reintegrate(t_stack **a, t_stack **b, int threshold)
     {
         if (steps > 0)
         {
-            rb(b);
+            rb(b, instructions);
             steps--;
         }
         else
         {
-            rrb(b);
+            rrb(b, instructions);
             steps++;
         }
     }
-    insert_sorted(a, b);
+    insert_sorted(a, b, instructions);
 }
 
-void algo(t_stack **a, t_stack **b)
+void algo(t_stack **a, t_stack **b, t_list **instructions)
 {
     int min_pos;
     int size;
@@ -269,9 +271,13 @@ void algo(t_stack **a, t_stack **b)
     t_stack *min_node;
     int threshold;
 
-    k_sorting(a, b);
+    threshold = 0;
+    k_sorting(a, b, instructions);
     while (*b)
-        reintegrate(a, b, threshold++);
+    {
+        reintegrate(a, b, threshold, instructions);
+        threshold++;
+    }
     size = get_stack_size(*a);
     current = *a;
     min_node = *a;
@@ -291,7 +297,7 @@ void algo(t_stack **a, t_stack **b)
     {
         while (min_pos > 0)
         {
-            ra(a);
+            ra(a, instructions);
             min_pos--;
         }
     }
@@ -300,7 +306,7 @@ void algo(t_stack **a, t_stack **b)
         min_pos = size - min_pos;
         while (min_pos > 0)
         {
-            rra(a);
+            rra(a, instructions);
             min_pos--;
         }
     }
