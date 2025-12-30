@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/15 03:05:53 by blamotte          #+#    #+#             */
-/*   Updated: 2025/12/18 00:15:17 by marvin           ###   ########.fr       */
+/*   Updated: 2025/12/29 21:10:26 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,21 +27,39 @@ void	swap(t_stack *stack)
 	stack->next->index = tmp_index;
 }
 
-void	sa(t_stack **a, t_list **instructions)
+// void	sa(t_stack **a, t_list **instructions)
+// {
+// 	swap(*a);
+// 	ft_lstadd_back(&instructions, ft_lstnew("sa"));
+// }
+
+// void	sb(t_stack **b, t_list **instructions)
+// {
+// 	swap(*b);
+// 	ft_lstadd_back(&instructions, ft_lstnew("sb"));
+// }
+
+// void	ss(t_stack **a, t_stack **b, t_list **instructions)
+// {
+// 	swap(*a);
+// 	swap(*b);
+// 	ft_lstadd_back(&instructions, ft_lstnew("ss"));
+// }
+void	sa(t_stack **a)
 {
 	swap(*a);
-	ft_lstadd_back(&instructions, ft_lstnew("sa"));
+	write(1, "sa\n", 3);
 }
 
-void	sb(t_stack **b, t_list **instructions)
+void	sb(t_stack **b)
 {
 	swap(*b);
-	ft_lstadd_back(&instructions, ft_lstnew("sb"));
+	write(1, "sa\n", 3);
 }
 
-void	ss(t_stack **a, t_stack **b, t_list **instructions)
+void	ss(t_stack **a, t_stack **b)
 {
 	swap(*a);
 	swap(*b);
-	ft_lstadd_back(&instructions, ft_lstnew("ss"));
+	write(1, "ss\n", 3);
 }

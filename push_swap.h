@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/13 23:25:24 by blamotte          #+#    #+#             */
-/*   Updated: 2025/12/18 00:41:08 by marvin           ###   ########.fr       */
+/*   Updated: 2025/12/29 20:57:21 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,11 @@ typedef struct s_stack
 	struct s_stack	*prev;
 }					t_stack;
 
-typedef struct s_list
-{
-    char                current[4] {};
-    struct s_list      *next;
-}                       t_list;
+// typedef struct s_list
+// {
+//     char                current[4];
+//     struct s_list      *next;
+// }                       t_list;
 
 
 int					parsing(char **av, t_stack **a);
