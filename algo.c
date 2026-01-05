@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/15 04:16:10 by blamotte          #+#    #+#             */
-/*   Updated: 2025/12/30 02:48:51 by marvin           ###   ########.fr       */
+/*   Updated: 2026/01/05 04:51:41 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,12 @@ void k_sorting(t_stack **a, t_stack **b, t_list **instructions)
 	int initial_chunk;
     int threshold;
     int moved;
-    int total_size;
 
     threshold = 0;
-    total_size = get_stack_size(*a);
-    chunk_size = total_size / 5;
-    if (chunk_size < 3)
-        chunk_size = 3;
+    chunk_size = get_stack_size(*a) / 6;
+    //chunk_size = 32;
+    if (chunk_size < 6)
+        chunk_size = 6;
     initial_chunk = chunk_size;
     while (*a)
     {
@@ -42,9 +41,9 @@ void k_sorting(t_stack **a, t_stack **b, t_list **instructions)
             else
                 ra(a, instructions);
         }
-        if (chunk_size > initial_chunk / 3 && chunk_size > 3)
-            chunk_size = chunk_size * 3 / 4;
-        else if (chunk_size > 1)
+        if (chunk_size > initial_chunk / 2 && chunk_size > get_stack_size(*a) / 5)
+            chunk_size = chunk_size * 6 / 7;
+        else if (chunk_size > 2)
             chunk_size--;
     }
 }
@@ -108,36 +107,6 @@ int mouv_cost_a(t_stack **a, t_stack *target)
         return (f_cost);
     else
         return (-b_cost);
-}
-
-int cost_heuristic(t_stack *target, int threshold, int ideal_position)
-{
-//     int bonus;
-    
-//     bonus = 0;
-//     if (target->index - threshold > 0)
-//         bonus -= target->index - threshold;
-//     else
-//         bonus += 1;
-//     if ((target->index - ideal_position) >= 0)
-//         bonus -= (target->index - ideal_position) / 2;
-//     else
-//         bonus -= -(target->index - ideal_position) / 2;
-//     if (target->index < threshold || target->index > ideal_position - 3)
-//         bonus -= 5;
-//     if (target->index % 3 == 0 || target->index % 7 == 0)
-//         bonus += threshold % 3;
-//     if (target->index % 5 == 0)
-//         bonus += 2;
-//     if (target->index % 7 == 0)
-//         bonus -= 2;
-//     if ((threshold + target->index) % 11 == 0)
-//         bonus += 1; 
-//     return bonus;
-    (void)target;
-    (void)threshold;
-    (void)ideal_position;
-    return 0;
 }
 
 int find_insert_pos(t_stack **a, int value)
@@ -236,7 +205,13 @@ void reintegrate(t_stack **a, t_stack **b, int threshold, t_list **instructions)
     i = 0;
     while (i < size)
     {
-        total_cost = ft_abs(mouv_cost_b(b, current)) + ft_abs(mouv_cost_a(a, current) + cost_heuristic(current, threshold, get_stack_size(*a)));
+        if (mouv_cost_a(a, current) * mouv_cost_b(b, current) >= 0)
+            total_cost = ft_max(ft_abs(mouv_cost_b(b, current)), ft_abs(mouv_cost_a(a, current)));
+        else
+            total_cost = ft_abs(mouv_cost_b(b, current)) + ft_abs(mouv_cost_a(a, current));
+        if (current->next && current->index == current->next->index + 1)
+            total_cost--;
+            //total_cost -= cost_heuristic(current, threshold, get_stack_size(*a));
         if (total_cost < best_total_cost)
         {
             best_total_cost = total_cost;
@@ -259,6 +234,7 @@ void reintegrate(t_stack **a, t_stack **b, int threshold, t_list **instructions)
             steps++;
         }
     }
+    (void)threshold;
     insert_sorted(a, b, instructions);
 }
 

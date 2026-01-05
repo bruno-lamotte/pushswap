@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: blamotte <blamotte@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/12 16:15:02 by blamotte          #+#    #+#             */
-/*   Updated: 2025/12/15 05:24:41 by blamotte         ###   ########.fr       */
+/*   Updated: 2026/01/04 23:43:55 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	isvalid(char *arg)
 		return (0);
 	while (*arg)
 	{
-		if (!ft_isdigit(*arg))
+		if (!ft_isdigit(*arg) && !(*arg == '-'))
 			return (0);
 		arg++;
 	}
@@ -34,14 +34,14 @@ int	is_int_limits(char *arg)
 		if (ft_strlen(arg) > 11)
 			return (0);
 		if (ft_strlen(arg) == 11)
-			if (ft_strncmp("-2147483648", arg, 11) > 0)
+			if (ft_strncmp(arg, "-2147483648", 11) > 0)
 				return (0);
 		return (1);
 	}
 	if (ft_strlen(arg) > 10)
 		return (0);
 	if (ft_strlen(arg) == 10)
-		if (ft_strncmp("2147483647", arg, 10) > 0)
+		if (ft_strncmp(arg, "2147483647", 10) > 0)
 			return (0);
 	return (1);
 }
