@@ -6,7 +6,7 @@
 /*   By: blamotte <blamotte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/15 04:16:10 by blamotte          #+#    #+#             */
-/*   Updated: 2026/01/06 09:19:01 by blamotte         ###   ########.fr       */
+/*   Updated: 2026/01/06 11:58:04 by blamotte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,11 +132,13 @@ int find_insert_pos(t_stack **a, int value, int size)
     return (min_pos);
 }
 
-void insert_sorted(t_stack **a, t_stack **b, t_list **instructions, int size)
+void insert_sorted(t_stack **a, t_stack **b, t_list **instructions, int print)
 {
     int     pos;
     int     moves;
-
+    int     size;
+    
+    size = get_stack_size(*a);
     if (!*a)
         return (pa(a, b, instructions));
     pos = find_insert_pos(a, (*b)->value, size);
@@ -144,19 +146,22 @@ void insert_sorted(t_stack **a, t_stack **b, t_list **instructions, int size)
     {
         moves = pos;
         while (moves-- > 0)
-            ra(a, instructions, 0);
+            ra(a, instructions, print);
     }
     else
     {
         moves = size - pos;
         while (moves-- > 0)
-            rra(a, instructions, 0);
+            rra(a, instructions, print);
     }
     pa(a, b, instructions);
 }
 
 void    mouv_up_in_b(int steps, t_stack **a, t_stack **b, t_list **instructions)
 {
+    int print;
+    
+    print = instructions != 0;
     while (steps != 0)
     {
         if (steps > 0)
@@ -170,7 +175,7 @@ void    mouv_up_in_b(int steps, t_stack **a, t_stack **b, t_list **instructions)
             steps++;
         }
     }
-    insert_sorted(a, b, instructions, get_stack_size(*a));
+    insert_sorted(a, b, instructions, print);
 }
 
 t_stack *copy_stack(t_stack *stack, int size)
@@ -207,13 +212,13 @@ void    keep_bests_mouvs(int total_cost, int cost_b, t_mouv *mouvs)
     int i;
     int j;
     
-    i = 3;
+    i = 1;
     while (i--)
     {
         
         if (total_cost < mouvs[i].total_cost)
         {
-            j = 2;
+            j = 0;
             while (j > i)
             {
                 mouvs[j] = mouvs[j - 1];
@@ -230,7 +235,7 @@ void    inititalize_mouvs(t_mouv *mouvs)
 {
     int i;
 
-    i = 3;
+    i = 1;
     while (i--)
     {
         mouvs[i].total_cost = 2147483647;
@@ -253,7 +258,7 @@ void    get_best_mouvs(t_stack *a, t_stack *b, t_mouv *mouvs, int size)
     i = 0;
     while (i < size)
     {
-        (1 && (cost_b = mouv_cost_b(&b, current)), (cost_a = mouv_cost_a(&a, current, size)));
+        (1 && (cost_b = mouv_cost_b(&b, current)), (cost_a = mouv_cost_a(&a, current, get_stack_size(a))));
         if (cost_a * cost_b >= 0)
             total_cost = ft_max(ft_abs(cost_b), ft_abs(cost_a));
         else
@@ -268,7 +273,7 @@ void    get_best_mouvs(t_stack *a, t_stack *b, t_mouv *mouvs, int size)
 
 int evaluate_branch(t_stack *a, t_stack *b, int depth, int size)
 {
-    t_mouv mouvs[3];
+    t_mouv mouvs[1];
     int min_cost;
     int i;
     t_stack *temp_a;
@@ -282,12 +287,12 @@ int evaluate_branch(t_stack *a, t_stack *b, int depth, int size)
         return (mouvs[0].total_cost);
     min_cost = 2147483647;
     i = 0;
-    while (i < 3 && mouvs[i].total_cost != 2147483647)
+    while (i < 1 && mouvs[i].total_cost != 2147483647)
     {
-        temp_a = copy_stack(a, size);
+        temp_a = copy_stack(a, get_stack_size(a));
         temp_b = copy_stack(b, size);
         mouv_up_in_b(mouvs[i].cost_b, &temp_a, &temp_b, NULL);
-        total = mouvs[i].total_cost + evaluate_branch(temp_a, temp_b, depth - 1, size);       
+        total = mouvs[i].total_cost + evaluate_branch(temp_a, temp_b, depth - 1, size - 1);       
         if (total < min_cost)
             min_cost = total;   
         free_stack(&temp_a);
@@ -299,7 +304,7 @@ int evaluate_branch(t_stack *a, t_stack *b, int depth, int size)
 
 void reintegrate(t_stack **a, t_stack **b, t_list **instructions, int size)
 {
-    t_mouv mouvs[3];
+    t_mouv mouvs[1];
     int best_index;
     int best_cost;
     int i;
@@ -313,12 +318,12 @@ void reintegrate(t_stack **a, t_stack **b, t_list **instructions, int size)
     best_index = 0;
     best_cost = 2147483647;
     i = 0;
-    while (i < 3 && mouvs[i].total_cost != 2147483647)
+    while (i < 1 && mouvs[i].total_cost != 2147483647)
     {
         temp_a = copy_stack(*a, get_stack_size(*a));
         temp_b = copy_stack(*b, size);
         mouv_up_in_b(mouvs[i].cost_b, &temp_a, &temp_b, NULL);
-        total = mouvs[i].total_cost + evaluate_branch(temp_a, temp_b, 2, size);
+        total = mouvs[i].total_cost + evaluate_branch(temp_a, temp_b, 0, size - 1);
         if (total < best_cost)
             (1 && (best_cost = total), (best_index = i));   
         free_stack(&temp_a);
