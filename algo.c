@@ -6,7 +6,7 @@
 /*   By: blamotte <blamotte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/15 04:16:10 by blamotte          #+#    #+#             */
-/*   Updated: 2026/01/06 18:35:54 by blamotte         ###   ########.fr       */
+/*   Updated: 2026/01/06 19:36:25 by blamotte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void k_sorting(t_stack **a, t_stack **b, t_list **instructions, int size)
     }
 }
 
-int mouv_cost_b(t_stack **b, t_stack *target)
+int mouv_cost_b(t_stack **b, t_stack *target, int direction)
 {
     int f_cost;
     int b_cost;
@@ -74,12 +74,12 @@ int mouv_cost_b(t_stack **b, t_stack *target)
         if (current == start)
             break ;
     }
-    if (f_cost <= b_cost)
+    if (direction)
         return (f_cost);
     return (-b_cost);
 }
 
-int mouv_cost_a(t_stack **a, t_stack *target, int size)
+int mouv_cost_a(t_stack **a, t_stack *target, int size, int direction)
 {
     int f_cost;
     int b_cost;
@@ -97,7 +97,7 @@ int mouv_cost_a(t_stack **a, t_stack *target, int size)
             break ;
     }
     b_cost = size - f_cost;
-    if (f_cost < b_cost)
+    if (direction)
         return (f_cost);
     else
         return (-b_cost);
@@ -204,7 +204,7 @@ t_stack *copy_stack(t_stack *stack, int size)
     return (new_stack);
 }
 
-void    keep_bests_mouvs(int total_cost, int cost_b, t_mouv *mouvs)
+void    keep_bests_mouvs(t_mouv new_mouv, t_mouv *mouvs)
 {
     int i;
     int j;
@@ -213,7 +213,7 @@ void    keep_bests_mouvs(int total_cost, int cost_b, t_mouv *mouvs)
     while (i--)
     {
         
-        if (total_cost < mouvs[i].total_cost)
+        if (new_mouv.total_cost < mouvs[i].total_cost)
         {
             j = 0;
             while (j > i)
@@ -221,9 +221,8 @@ void    keep_bests_mouvs(int total_cost, int cost_b, t_mouv *mouvs)
                 mouvs[j] = mouvs[j - 1];
                 j--;
             }
-            mouvs[i].cost_b = cost_b;
-            mouvs[i].total_cost = total_cost;
-            return ;
+            mouvs[i] = new_mouv;
+            break;
         }
     }
 }
@@ -237,34 +236,57 @@ void    inititalize_mouvs(t_mouv *mouvs)
     {
         mouvs[i].total_cost = 2147483647;
         mouvs[i].cost_b = 0;
+        mouvs[i].cost_a = 0;
+    }
+}
+
+void    try_combi(t_stack *a, t_stack *b, t_stack *current, t_mouv *best_for_item)
+{
+    int costs[4][2]; // [0] = cost_a, [1] = cost_b
+    int totals[4];
+    int i;
+    int size_a = get_stack_size(a);
+
+    costs[0][0] = mouv_cost_a(&a, current, size_a, 1);
+    costs[0][1] = mouv_cost_b(&b, current, 1);
+    totals[0] = ft_max(costs[0][0], costs[0][1]);
+    costs[1][0] = mouv_cost_a(&a, current, size_a, 0);
+    costs[1][1] = mouv_cost_b(&b, current, 0);
+    totals[1] = ft_max(ft_abs(costs[1][0]), ft_abs(costs[1][1]));
+    costs[2][0] = mouv_cost_a(&a, current, size_a, 1);
+    costs[2][1] = mouv_cost_b(&b, current, 0);
+    totals[2] = costs[2][0] + ft_abs(costs[2][1]);
+    costs[3][0] = mouv_cost_a(&a, current, size_a, 0);
+    costs[3][1] = mouv_cost_b(&b, current, 1);
+    totals[3] = ft_abs(costs[3][0]) + costs[3][1];
+    best_for_item->total_cost = 2147483647;
+    i = 0;
+    while (i < 4)
+    {
+        if (totals[i] < best_for_item->total_cost)
+        {
+            best_for_item->total_cost = totals[i];
+            best_for_item->cost_a = costs[i][0];
+            best_for_item->cost_b = costs[i][1];
+        }
+        i++;
     }
 }
 
 void    get_best_mouvs(t_stack *a, t_stack *b, t_mouv *mouvs, int size)
 {
     t_stack *current;
-    int i;
-    int cost_a;
-    int cost_b;
-    int total_cost;
+    t_mouv  tmp_mouv;
 
     inititalize_mouvs(mouvs);
     if (!b)
-        return;
+        return ;
     current = b;
-    i = 0;
-    while (i < size)
+    while (size--)
     {
-        (1 && (cost_b = mouv_cost_b(&b, current)), (cost_a = mouv_cost_a(&a, current, get_stack_size(a))));
-        if (cost_a * cost_b >= 0)
-            total_cost = ft_max(ft_abs(cost_b), ft_abs(cost_a));
-        else
-            total_cost = ft_abs(cost_b) + ft_abs(cost_a);
-        if (current->next && current->index == current->next->index + 1)
-            total_cost--;
-        keep_bests_mouvs(total_cost, cost_b, mouvs);
+        try_combi(a, b, current, &tmp_mouv);
+        keep_bests_mouvs(tmp_mouv, mouvs);
         current = current->next;
-        i++;
     }
 }
 
