@@ -6,11 +6,13 @@
 /*   By: blamotte <blamotte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/15 04:16:10 by blamotte          #+#    #+#             */
-/*   Updated: 2026/01/06 11:58:04 by blamotte         ###   ########.fr       */
+/*   Updated: 2026/01/06 17:25:43 by blamotte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
+#define DEPTH 1
+#define CANDIDATES 1
 
 int adapt_chunk_size(int chunk_size, int initial_chunk, t_stack **a)
 {
@@ -79,30 +81,6 @@ int mouv_cost_b(t_stack **b, t_stack *target)
     return (-b_cost);
 }
 
-int mouv_cost_a(t_stack **a, t_stack *target, int size)
-{
-    int f_cost;
-    int b_cost;
-    t_stack *current;
-    t_stack *start;
-
-    if (!a || !*a || !target)
-        return (0);
-    (1 && (start = *a), (current = *a), (f_cost = 0));
-    while (f_cost < size && current->value < target->value)
-    {
-        current = current->next;
-        f_cost++;
-        if (current == start)
-            break ;
-    }
-    b_cost = size - f_cost;
-    if (f_cost < b_cost)
-        return (f_cost);
-    else
-        return (-b_cost);
-}
-
 int find_insert_pos(t_stack **a, int value, int size)
 {
     t_stack *current;
@@ -131,14 +109,25 @@ int find_insert_pos(t_stack **a, int value, int size)
     }
     return (min_pos);
 }
+int mouv_cost_a(t_stack **a, t_stack *target, int size)
+{
+    int pos;
 
-void insert_sorted(t_stack **a, t_stack **b, t_list **instructions, int print)
+    if (!a || !*a || !target)
+        return (0);
+    pos = find_insert_pos(a, target->value, size);
+    if (pos <= size / 2)
+        return (pos);
+    return (pos - size);
+}
+
+void insert_sorted(t_stack **a, t_stack **b, t_list **instructions, int size)
 {
     int     pos;
     int     moves;
-    int     size;
-    
-    size = get_stack_size(*a);
+    int     print;
+
+    print = instructions != 0;
     if (!*a)
         return (pa(a, b, instructions));
     pos = find_insert_pos(a, (*b)->value, size);
@@ -157,25 +146,45 @@ void insert_sorted(t_stack **a, t_stack **b, t_list **instructions, int print)
     pa(a, b, instructions);
 }
 
-void    mouv_up_in_b(int steps, t_stack **a, t_stack **b, t_list **instructions)
+void	finish_b_and_push(int cost_b, t_stack **a, t_stack **b, t_list **inst)
 {
-    int print;
-    
-    print = instructions != 0;
-    while (steps != 0)
+	while (cost_b > 0)
+	{
+		rb(b, inst);
+		cost_b--;
+	}
+	while (cost_b < 0)
+	{
+		rrb(b, inst);
+		cost_b++;
+	}
+	pa(a, b, inst);
+}
+void	apply_move(t_stack **a, t_stack **b, int cost_a, int cost_b, t_list **inst)
+{
+	while (cost_a > 0 && cost_b > 0)
+	{
+		rr(a, b, inst);
+		cost_a--;
+		cost_b--;
+	}
+	while (cost_a < 0 && cost_b < 0)
+	{
+		rrr(a, b, inst);
+		cost_a++;
+		cost_b++;
+	}
+	while (cost_a > 0)
     {
-        if (steps > 0)
-        {
-            rb(b, instructions);
-            steps--;
-        }
-        else
-        {
-            rrb(b, instructions);
-            steps++;
-        }
+		ra(a, inst, 1);
+        cost_a--;
     }
-    insert_sorted(a, b, instructions, print);
+	while (cost_a < 0)
+    {
+		rra(a, inst, 1);
+        cost_a++;
+    }
+    finish_b_and_push(cost_b, a, b, inst);
 }
 
 t_stack *copy_stack(t_stack *stack, int size)
@@ -207,35 +216,36 @@ t_stack *copy_stack(t_stack *stack, int size)
     return (new_stack);
 }
 
-void    keep_bests_mouvs(int total_cost, int cost_b, t_mouv *mouvs)
+void	keep_bests_mouvs(int t_cost, int cost_a, int cost_b, t_mouv *mouvs)
 {
-    int i;
-    int j;
-    
-    i = 1;
-    while (i--)
-    {
-        
-        if (total_cost < mouvs[i].total_cost)
-        {
-            j = 0;
-            while (j > i)
-            {
-                mouvs[j] = mouvs[j - 1];
-                j--;
-            }
-            mouvs[i].cost_b = cost_b;
-            mouvs[i].total_cost = total_cost;
-            return ;
-        }
-    }
+	int	i;
+	int	j;
+
+	i = 0;
+	while (i < CANDIDATES)
+	{
+		if (t_cost < mouvs[i].total_cost)
+		{
+			j = CANDIDATES - 1;
+			while (j > i)
+			{
+				mouvs[j] = mouvs[j - 1];
+				j--;
+			}
+			mouvs[i].total_cost = t_cost;
+			mouvs[i].cost_a = cost_a;
+			mouvs[i].cost_b = cost_b;
+			return ;
+		}
+		i++;
+	}
 }
 
 void    inititalize_mouvs(t_mouv *mouvs)
 {
     int i;
 
-    i = 1;
+    i = CANDIDATES;
     while (i--)
     {
         mouvs[i].total_cost = 2147483647;
@@ -243,37 +253,53 @@ void    inititalize_mouvs(t_mouv *mouvs)
     }
 }
 
-void    get_best_mouvs(t_stack *a, t_stack *b, t_mouv *mouvs, int size)
+static void	try_combinations(int *c_a, int *c_b, t_mouv *mouvs)
 {
-    t_stack *current;
-    int i;
-    int cost_a;
-    int cost_b;
-    int total_cost;
+	int	tot;
 
-    inititalize_mouvs(mouvs);
-    if (!b)
-        return;
-    current = b;
-    i = 0;
-    while (i < size)
-    {
-        (1 && (cost_b = mouv_cost_b(&b, current)), (cost_a = mouv_cost_a(&a, current, get_stack_size(a))));
-        if (cost_a * cost_b >= 0)
-            total_cost = ft_max(ft_abs(cost_b), ft_abs(cost_a));
-        else
-            total_cost = ft_abs(cost_b) + ft_abs(cost_a);
-        if (current->next && current->index == current->next->index + 1)
-            total_cost--;
-        keep_bests_mouvs(total_cost, cost_b, mouvs);
-        current = current->next;
-        i++;
-    }
+	if (c_a[0] > c_b[0])
+		tot = c_a[0];
+	else
+		tot = c_b[0];
+	keep_bests_mouvs(tot, c_a[0], c_b[0], mouvs);
+	if (ft_abs(c_a[1]) > ft_abs(c_b[1]))
+		tot = ft_abs(c_a[1]);
+	else
+		tot = ft_abs(c_b[1]);
+	keep_bests_mouvs(tot, c_a[1], c_b[1], mouvs);
+	tot = c_a[0] + ft_abs(c_b[1]);
+	keep_bests_mouvs(tot, c_a[0], c_b[1], mouvs);
+	tot = ft_abs(c_a[1]) + c_b[0];
+	keep_bests_mouvs(tot, c_a[1], c_b[0], mouvs);
+}
+
+void	get_best_mouvs(t_stack *a, t_stack *b, t_mouv *mouvs, int size_b)
+{
+	t_stack	*cur;
+	int		c_a[2];
+	int		c_b[2];
+	int		i;
+	int		size_a;
+
+	inititalize_mouvs(mouvs);
+	cur = b;
+	i = 0;
+	size_a = get_stack_size(a);
+	while (i < size_b)
+	{
+		c_b[0] = i;
+		c_b[1] = i - size_b;
+		c_a[0] = find_insert_pos(&a, cur->value, size_a);
+		c_a[1] = c_a[0] - size_a;
+		try_combinations(c_a, c_b, mouvs);
+		cur = cur->next;
+		i++;
+	}
 }
 
 int evaluate_branch(t_stack *a, t_stack *b, int depth, int size)
 {
-    t_mouv mouvs[1];
+    t_mouv mouvs[CANDIDATES];
     int min_cost;
     int i;
     t_stack *temp_a;
@@ -287,14 +313,19 @@ int evaluate_branch(t_stack *a, t_stack *b, int depth, int size)
         return (mouvs[0].total_cost);
     min_cost = 2147483647;
     i = 0;
-    while (i < 1 && mouvs[i].total_cost != 2147483647)
+    while (i < CANDIDATES && mouvs[i].total_cost != 2147483647)
     {
+        if (mouvs[i].total_cost >= min_cost)
+        {
+            i++;
+            continue;
+        }
         temp_a = copy_stack(a, get_stack_size(a));
         temp_b = copy_stack(b, size);
-        mouv_up_in_b(mouvs[i].cost_b, &temp_a, &temp_b, NULL);
+        apply_move(&temp_a, &temp_b, mouvs[i].cost_a, mouvs[i].cost_b, NULL);
         total = mouvs[i].total_cost + evaluate_branch(temp_a, temp_b, depth - 1, size - 1);       
         if (total < min_cost)
-            min_cost = total;   
+            min_cost = total;
         free_stack(&temp_a);
         free_stack(&temp_b);
         i++;
@@ -304,7 +335,7 @@ int evaluate_branch(t_stack *a, t_stack *b, int depth, int size)
 
 void reintegrate(t_stack **a, t_stack **b, t_list **instructions, int size)
 {
-    t_mouv mouvs[1];
+    t_mouv mouvs[CANDIDATES];
     int best_index;
     int best_cost;
     int i;
@@ -314,23 +345,30 @@ void reintegrate(t_stack **a, t_stack **b, t_list **instructions, int size)
     
     if (!*b)
         return ;
+    if (!*a)
+        return (pa(a, b, instructions));
     get_best_mouvs(*a, *b, mouvs, size);
     best_index = 0;
     best_cost = 2147483647;
     i = 0;
-    while (i < 1 && mouvs[i].total_cost != 2147483647)
+    while (i < CANDIDATES && mouvs[i].total_cost != 2147483647)
     {
+        if (mouvs[i].total_cost >= best_cost)
+        {
+            i++;
+            continue;
+        }
         temp_a = copy_stack(*a, get_stack_size(*a));
         temp_b = copy_stack(*b, size);
-        mouv_up_in_b(mouvs[i].cost_b, &temp_a, &temp_b, NULL);
-        total = mouvs[i].total_cost + evaluate_branch(temp_a, temp_b, 0, size - 1);
+        apply_move(&temp_a, &temp_b, mouvs[i].cost_a, mouvs[i].cost_b, NULL);
+        total = mouvs[i].total_cost + evaluate_branch(temp_a, temp_b, DEPTH - 1, size - 1);
         if (total < best_cost)
             (1 && (best_cost = total), (best_index = i));   
         free_stack(&temp_a);
         free_stack(&temp_b);
         i++;
     }
-    mouv_up_in_b(mouvs[best_index].cost_b, a, b, instructions);
+    apply_move(a, b, mouvs[best_index].cost_a, mouvs[best_index].cost_b, instructions);
 }
 
 void    final_rotate(t_stack **a, t_list **instructions, int size)
