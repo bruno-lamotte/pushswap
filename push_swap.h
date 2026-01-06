@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   push_swap.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: blamotte <blamotte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/13 23:25:24 by blamotte          #+#    #+#             */
-/*   Updated: 2025/12/30 02:46:28 by marvin           ###   ########.fr       */
+/*   Updated: 2026/01/06 08:13:46 by blamotte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,19 +26,26 @@ typedef struct s_stack
 	struct s_stack	*prev;
 }					t_stack;
 
+typedef struct s_mouv
+{
+    int cost_b;
+    int total_cost;
+}   	t_mouv;
+
 int					parsing(char **av, t_stack **a);
 t_stack				*ft_new_node(int value);
 void				add_back(t_stack **stack, t_stack *new_node);
 void				free_stack(t_stack **stack);
+void				free_list(t_list *instructions);
 void				sa(t_stack **a, t_list **instructions);
 void				sb(t_stack **b, t_list **instructions);
 void				ss(t_stack **a, t_stack **b, t_list **instructions);
 void				pa(t_stack **a, t_stack **b, t_list **instructions);
 void				pb(t_stack **a, t_stack **b, t_list **instructions);
-void				ra(t_stack **a, t_list **instructions);
+void				ra(t_stack **a, t_list **instructions, int print);
 void				rb(t_stack **b, t_list **instructions);
 void				rr(t_stack **a, t_stack **b, t_list **instructions);
-void				rra(t_stack **a, t_list **instructions);
+void				rra(t_stack **a, t_list **instructions, int print);
 void				rrb(t_stack **b, t_list **instructions);
 void				rrr(t_stack **a, t_stack **b, t_list **instructions);
 void				push_swap(t_stack **a);

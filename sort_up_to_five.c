@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   sort_up_to_five.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: blamotte <blamotte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/15 03:57:27 by blamotte          #+#    #+#             */
-/*   Updated: 2025/12/30 02:08:56 by marvin           ###   ########.fr       */
+/*   Updated: 2026/01/06 07:59:55 by blamotte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,9 +54,9 @@ void	sort_three(t_stack **a, t_list **instructions)
 
 	max = get_max(*a);
 	if (*a == max)
-		ra(a, instructions);
+		ra(a, instructions, 1);
 	else if ((*a)->next == max)
-		rra(a, instructions);
+		rra(a, instructions, 1);
 	if ((*a)->index > (*a)->next->index)
 		sa(a, instructions);
 }
@@ -74,10 +74,10 @@ void	put_on_to_top(t_stack **a, t_stack *node, t_list **instructions)
 		tmp = tmp->next;
 	if (i <= size / 2)
 		while (*a != node)
-			ra(a, instructions);
+			ra(a, instructions, 1);
 	else
 		while (*a != node)
-			rra(a, instructions);
+			rra(a, instructions, 1);
 }
 
 void	sort_five(t_stack **a, t_stack **b, t_list **instructions)
@@ -94,50 +94,3 @@ void	sort_five(t_stack **a, t_stack **b, t_list **instructions)
 	while (*b)
 		pa(a, b, instructions);
 }
-
-// void	sort_three(t_stack **a)
-// {
-// 	t_stack	*max;
-
-// 	max = get_max(*a);
-// 	if (*a == max)
-// 		ra(a);
-// 	else if ((*a)->next == max)
-// 		rra(a);
-// 	if ((*a)->index > (*a)->next->index)
-// 		sa(a);
-// }
-
-// void	put_on_to_top(t_stack **a, t_stack *node)
-// {
-// 	int		size;
-// 	int		i;
-// 	t_stack	*tmp;
-
-// 	size = get_stack_size(*a);
-// 	i = 0;
-// 	tmp = *a;
-// 	while (tmp != node && i++)
-// 		tmp = tmp->next;
-// 	if (i <= size / 2)
-// 		while (*a != node)
-// 			ra(a);
-// 	else
-// 		while (*a != node)
-// 			rra(a);
-// }
-
-// void	sort_five(t_stack **a, t_stack **b)
-// {
-// 	t_stack	*min;
-
-// 	while (get_stack_size(*a) > 3)
-// 	{
-// 		min = get_min(*a);
-// 		put_on_to_top(a, min);
-// 		pb(a, b);
-// 	}
-// 	sort_three(a);
-// 	while (*b)
-// 		pa(a, b);
-// }

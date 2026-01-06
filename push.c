@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   push.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: blamotte <blamotte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/15 03:13:58 by blamotte          #+#    #+#             */
-/*   Updated: 2025/12/30 03:02:28 by marvin           ###   ########.fr       */
+/*   Updated: 2026/01/06 07:58:09 by blamotte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,8 @@ void	pa(t_stack **a, t_stack **b, t_list **instructions)
 		return ;
 	node = cut_node(b);
 	push_node(a, node);
-	ft_lstadd_back(instructions, ft_lstnew(ft_strdup("pa")));
+	if (instructions)
+		ft_lstadd_back(instructions, ft_lstnew(ft_strdup("pa")));
 }
 
 void	pb(t_stack **a, t_stack **b, t_list **instructions)
@@ -74,25 +75,3 @@ void	pb(t_stack **a, t_stack **b, t_list **instructions)
 	push_node(b, node);
 	ft_lstadd_back(instructions, ft_lstnew(ft_strdup("pb")));
 }
-
-// void	pa(t_stack **a, t_stack **b)
-// {
-// 	t_stack	*node;
-
-// 	if (!*b)
-// 		return ;
-// 	node = cut_node(b);
-// 	push_node(a, node);
-// 	write(1, "pa\n", 3);
-// }
-
-// void	pb(t_stack **a, t_stack **b)
-// {
-// 	t_stack	*node;
-
-// 	if (!*a)
-// 		return ;
-// 	node = cut_node(a);
-// 	push_node(b, node);
-// 	write(1, "pb\n", 3);
-// }

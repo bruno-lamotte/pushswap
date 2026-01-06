@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   rotate.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: blamotte <blamotte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/15 02:58:16 by blamotte          #+#    #+#             */
-/*   Updated: 2025/12/30 03:02:28 by marvin           ###   ########.fr       */
+/*   Updated: 2026/01/06 07:58:40 by blamotte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,16 +19,18 @@ void	rotate(t_stack **stack)
 	*stack = (*stack)->next;
 }
 
-void	ra(t_stack **a, t_list **instructions)
+void	ra(t_stack **a, t_list **instructions, int print)
 {
 	rotate(a);
-	ft_lstadd_back(instructions, ft_lstnew(ft_strdup("ra")));
+	if (print)
+		ft_lstadd_back(instructions, ft_lstnew(ft_strdup("ra")));
 }
 
 void	rb(t_stack **b, t_list **instructions)
 {
 	rotate(b);
-	ft_lstadd_back(instructions, ft_lstnew(ft_strdup("rb")));
+	if (instructions)
+		ft_lstadd_back(instructions, ft_lstnew(ft_strdup("rb")));
 }
 
 void	rr(t_stack **a, t_stack **b, t_list **instructions)
@@ -37,22 +39,3 @@ void	rr(t_stack **a, t_stack **b, t_list **instructions)
 	rotate(b);
 	ft_lstadd_back(instructions, ft_lstnew(ft_strdup("rr")));
 }
-
-// void	ra(t_stack **a)
-// {
-// 	rotate(a);
-// 	write(1, "ra\n", 3);
-// }
-
-// void	rb(t_stack **b)
-// {
-// 	rotate(b);
-// 	write(1, "rb\n", 3);
-// }
-
-// void	rr(t_stack **a, t_stack **b)
-// {
-// 	rotate(a);
-// 	rotate(b);
-// 	write(1, "rr\n", 3);
-// }

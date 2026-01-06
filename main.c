@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/12 17:22:33 by blamotte          #+#    #+#             */
-/*   Updated: 2025/12/30 03:02:28 by marvin           ###   ########.fr       */
+/*   Updated: 2026/01/06 03:36:48 by blamotte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,7 +137,7 @@ int	main(int ac, char **av)
 		return (free_stack(&a), write(2, "Error\n", 6));
 	}
 	push_swap(&a);
-	print_stack(a);
+//	print_stack(a);
 	free_stack(&a);
 	return (0);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   swap.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: blamotte <blamotte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/15 03:05:53 by blamotte          #+#    #+#             */
-/*   Updated: 2025/12/30 03:02:28 by marvin           ###   ########.fr       */
+/*   Updated: 2026/01/06 07:57:02 by blamotte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,22 +45,3 @@ void	ss(t_stack **a, t_stack **b, t_list **instructions)
 	swap(*b);
 	ft_lstadd_back(instructions, ft_lstnew(ft_strdup("ss")));
 }
-
-// void	sa(t_stack **a)
-// {
-// 	swap(*a);
-// 	write(1, "sa\n", 3);
-// }
-
-// void	sb(t_stack **b)
-// {
-// 	swap(*b);
-// 	write(1, "sa\n", 3);
-// }
-
-// void	ss(t_stack **a, t_stack **b)
-// {
-// 	swap(*a);
-// 	swap(*b);
-// 	write(1, "ss\n", 3);
-// }
