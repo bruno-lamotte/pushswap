@@ -6,7 +6,7 @@
 /*   By: blamotte <blamotte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/15 04:16:10 by blamotte          #+#    #+#             */
-/*   Updated: 2026/01/06 19:36:25 by blamotte         ###   ########.fr       */
+/*   Updated: 2026/01/06 19:53:29 by blamotte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -209,10 +209,9 @@ void    keep_bests_mouvs(t_mouv new_mouv, t_mouv *mouvs)
     int i;
     int j;
     
-    i = 1;
-    while (i--)
+    i = 0;
+    while (i < 1)
     {
-        
         if (new_mouv.total_cost < mouvs[i].total_cost)
         {
             j = 0;
@@ -224,6 +223,7 @@ void    keep_bests_mouvs(t_mouv new_mouv, t_mouv *mouvs)
             mouvs[i] = new_mouv;
             break;
         }
+        i++;
     }
 }
 
@@ -242,7 +242,7 @@ void    inititalize_mouvs(t_mouv *mouvs)
 
 void    try_combi(t_stack *a, t_stack *b, t_stack *current, t_mouv *best_for_item)
 {
-    int costs[4][2]; // [0] = cost_a, [1] = cost_b
+    int costs[4][2];
     int totals[4];
     int i;
     int size_a = get_stack_size(a);
