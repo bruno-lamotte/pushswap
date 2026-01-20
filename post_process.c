@@ -57,6 +57,37 @@ int is_cancelable(t_list *current)
 	return (0);
 }
 
+static int	check_swap_optim(t_list **current)
+{
+	char	*s1;
+	char	*s2;
+	char	*s3;
+
+	if (!*current || !(*current)->next || !(*current)->next->next)
+		return (0);
+	s1 = (char *)(*current)->content;
+	s2 = (char *)(*current)->next->content;
+	s3 = (char *)(*current)->next->next->content;
+	if (s1 && s2 && s3)
+	{
+		if (!ft_strncmp(s1, "ra", 3) && !ft_strncmp(s2, "pb", 3) && !ft_strncmp(s3, "rra", 4))
+		{
+			print_instr("sa");
+			print_instr("pb");
+			*current = (*current)->next->next->next;
+			return (1);
+		}
+		if (!ft_strncmp(s1, "rb", 3) && !ft_strncmp(s2, "pa", 3) && !ft_strncmp(s3, "rrb", 4))
+		{
+			print_instr("sb");
+			print_instr("pa");
+			*current = (*current)->next->next->next;
+			return (1);
+		}
+	}
+	return (0);
+}
+
 void print_list(t_list *instructions)
 {
 	t_list *current;
@@ -64,16 +95,14 @@ void print_list(t_list *instructions)
 	current = instructions;
 	while (current)
 	{
-		if (current->content && (!ft_strncmp((char *)current->content, "ra", 3) || !ft_strncmp((char *)current->content, "rb", 3)))
-		{
-			print_multiple_instr(&current, "ra", "rb", "rr");
-		}
-		else if (current->content && (!ft_strncmp((char *)current->content, "rra", 4) || !ft_strncmp((char *)current->content, "rrb", 4)))
-		{
-			print_multiple_instr(&current, "rra", "rrb", "rrr");
-		}
-		else if (is_cancelable(current))
+		if (check_swap_optim(&current))
+			continue ;
+		if (is_cancelable(current))
 			current = current->next->next;
+		else if (current->content && (!ft_strncmp((char *)current->content, "ra", 3) || !ft_strncmp((char *)current->content, "rb", 3)))
+			print_multiple_instr(&current, "ra", "rb", "rr");
+		else if (current->content && (!ft_strncmp((char *)current->content, "rra", 4) || !ft_strncmp((char *)current->content, "rrb", 4)))
+			print_multiple_instr(&current, "rra", "rrb", "rrr");
 		else
 		{
 			if (current->content)

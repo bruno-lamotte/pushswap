@@ -3,16 +3,16 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: marvin <marvin@student.42.fr>              +#+  +:+       +#+         #
+#    By: blamotte <blamotte@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/10 18:42:33 by blamotte          #+#    #+#              #
-#    Updated: 2025/12/30 02:07:35 by marvin           ###   ########.fr        #
+#    Updated: 2026/01/06 20:33:22 by blamotte         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME        = push_swap
 CC          = cc
-CFLAGS      = -Wall -Wextra -Werror -g
+CFLAGS      = -Wall -Wextra -Werror -g3
 RM          = rm -f
 
 SRC_FILES   = main.c parsing.c utils_lst.c \

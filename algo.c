@@ -6,30 +6,28 @@
 /*   By: blamotte <blamotte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/15 04:16:10 by blamotte          #+#    #+#             */
-/*   Updated: 2026/01/06 19:53:29 by blamotte         ###   ########.fr       */
+/*   Updated: 2026/01/13 20:46:21 by blamotte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
-
-int adapt_chunk_size(int chunk_size, int initial_chunk, t_stack **a)
+#define DEPTH 0
+#define CANDIDATES 1
+int adapt_chunk_size(int chunk_size, t_stack **a)
 {
-    if (chunk_size > initial_chunk / 2 && chunk_size > get_stack_size(*a) / 5)
+    if (chunk_size > get_stack_size(*a) / 5)
         return (chunk_size * 6 / 7);
-    else if (chunk_size > 2)
-        return (--chunk_size);
     return (chunk_size);
 }
 
 void k_sorting(t_stack **a, t_stack **b, t_list **instructions, int size)
 {
 	int chunk_size;
-	int initial_chunk;
     int threshold;
     int moved;
 
     threshold = 0;
-    (1 && (chunk_size = size / 6), (initial_chunk = chunk_size));
+    chunk_size = size / 6;
     while (*a)
     {
         moved = 0;
@@ -43,10 +41,15 @@ void k_sorting(t_stack **a, t_stack **b, t_list **instructions, int size)
                 threshold++;
                 moved++;
             }
-            else
+			//else if ((*a)->next->index <= threshold + chunk_size - 1 && (*a)->index <= threshold + chunk_size)
+			//{
+			//	sa(a, instructions);
+			//	threshold--;
+			//}
+			else
                 ra(a, instructions, 1);
-        }
-        chunk_size = adapt_chunk_size(chunk_size, initial_chunk, a);
+       }
+        chunk_size = adapt_chunk_size(chunk_size, a);
     }
 }
 
@@ -210,11 +213,11 @@ void    keep_bests_mouvs(t_mouv new_mouv, t_mouv *mouvs)
     int j;
     
     i = 0;
-    while (i < 1)
+    while (i < CANDIDATES)
     {
         if (new_mouv.total_cost < mouvs[i].total_cost)
         {
-            j = 0;
+            j = CANDIDATES - 1;
             while (j > i)
             {
                 mouvs[j] = mouvs[j - 1];
@@ -231,7 +234,7 @@ void    inititalize_mouvs(t_mouv *mouvs)
 {
     int i;
 
-    i = 1;
+    i = CANDIDATES;
     while (i--)
     {
         mouvs[i].total_cost = 2147483647;
@@ -292,7 +295,7 @@ void    get_best_mouvs(t_stack *a, t_stack *b, t_mouv *mouvs, int size)
 
 int evaluate_branch(t_stack *a, t_stack *b, int depth, int size)
 {
-    t_mouv mouvs[1];
+    t_mouv mouvs[CANDIDATES];
     int min_cost;
     int i;
     t_stack *temp_a;
@@ -306,7 +309,7 @@ int evaluate_branch(t_stack *a, t_stack *b, int depth, int size)
         return (mouvs[0].total_cost);
     min_cost = 2147483647;
     i = 0;
-    while (i < 1 && mouvs[i].total_cost != 2147483647)
+    while (i < CANDIDATES && mouvs[i].total_cost != 2147483647)
     {
         temp_a = copy_stack(a, get_stack_size(a));
         temp_b = copy_stack(b, size);
@@ -323,7 +326,7 @@ int evaluate_branch(t_stack *a, t_stack *b, int depth, int size)
 
 void reintegrate(t_stack **a, t_stack **b, t_list **instructions, int size)
 {
-    t_mouv mouvs[1];
+    t_mouv mouvs[CANDIDATES];
     int best_index;
     int best_cost;
     int i;
@@ -337,12 +340,12 @@ void reintegrate(t_stack **a, t_stack **b, t_list **instructions, int size)
     best_index = 0;
     best_cost = 2147483647;
     i = 0;
-    while (i < 1 && mouvs[i].total_cost != 2147483647)
+    while (i < CANDIDATES && mouvs[i].total_cost != 2147483647)
     {
         temp_a = copy_stack(*a, get_stack_size(*a));
         temp_b = copy_stack(*b, size);
         mouv_up_in_b(mouvs[i].cost_b, &temp_a, &temp_b, NULL);
-        total = mouvs[i].total_cost + evaluate_branch(temp_a, temp_b, 0, size - 1);
+        total = mouvs[i].total_cost + evaluate_branch(temp_a, temp_b, DEPTH, size - 1);
         if (total < best_cost)
             (1 && (best_cost = total), (best_index = i));   
         free_stack(&temp_a);
