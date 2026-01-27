@@ -22,8 +22,8 @@ void	rev_rotate(t_stack **stack)
 void	rra(t_stack **a, t_list **instructions, int print)
 {
 	rev_rotate(a);
-	if (print)
-		add_instruction(instructions, "rra");
+	if (print && instructions)
+		ft_lstadd_back(instructions, ft_lstnew(ft_strdup("rra")));
 }
 
 void	rrb(t_stack **b, t_list **instructions)
@@ -37,5 +37,6 @@ void	rrr(t_stack **a, t_stack **b, t_list **instructions)
 {
 	rev_rotate(a);
 	rev_rotate(b);
-	add_instruction(instructions, "rrr");
+	if (instructions)
+		ft_lstadd_back(instructions, ft_lstnew(ft_strdup("rrr")));
 }

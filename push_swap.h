@@ -6,7 +6,7 @@
 /*   By: blamotte <blamotte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/13 23:25:24 by blamotte          #+#    #+#             */
-/*   Updated: 2026/01/27 03:28:22 by blamotte         ###   ########.fr       */
+/*   Updated: 2026/01/06 16:46:12 by blamotte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,10 @@ typedef struct s_stack
 
 typedef struct s_mouv
 {
-	int				cost_b;
-	int				cost_a;
-	int				total_cost;
-}					t_mouv;
+	int cost_a;
+    int cost_b;
+    int total_cost;
+}   	t_mouv;
 
 typedef struct s_eval
 {
