@@ -6,7 +6,7 @@
 /*   By: blamotte <blamotte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/15 02:58:16 by blamotte          #+#    #+#             */
-/*   Updated: 2026/01/06 07:58:40 by blamotte         ###   ########.fr       */
+/*   Updated: 2026/01/27 02:42:28 by blamotte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,19 +23,19 @@ void	ra(t_stack **a, t_list **instructions, int print)
 {
 	rotate(a);
 	if (print)
-		ft_lstadd_back(instructions, ft_lstnew(ft_strdup("ra")));
+		add_instruction(instructions, "ra");
 }
 
 void	rb(t_stack **b, t_list **instructions)
 {
 	rotate(b);
 	if (instructions)
-		ft_lstadd_back(instructions, ft_lstnew(ft_strdup("rb")));
+		add_instruction(instructions, "rb");
 }
 
 void	rr(t_stack **a, t_stack **b, t_list **instructions)
 {
 	rotate(a);
 	rotate(b);
-	ft_lstadd_back(instructions, ft_lstnew(ft_strdup("rr")));
+	add_instruction(instructions, "rr");
 }

@@ -1,25 +1,22 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   post_process.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: blamotte <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/27 01:01:03 by blamotte          #+#    #+#             */
+/*   Updated: 2026/01/27 01:10:50 by blamotte         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "push_swap.h"
 
-static void	print_instr(char *instr)
+void	print_multiple_instr(t_list **current, char *instr1, char *instr2,
+		char *instr3)
 {
-	ft_putstr_fd(instr, 1);
-	ft_putchar_fd('\n', 1);
-}
-
-static int	match_instr(t_list *node, char *instr1, char *instr2)
-{
-	if (!node || !node->content)
-		return (0);
-	if (!ft_strncmp((char *)node->content, instr1, 4) ||
-		!ft_strncmp((char *)node->content, instr2, 4))
-		return (1);
-	return (0);
-}
-
-void print_multiple_instr(t_list **current, char *instr1, char *instr2, char *instr3)
-{
-	int instr1_count;
-	int instr2_count;
+	int	instr1_count;
+	int	instr2_count;
 
 	instr1_count = 0;
 	instr2_count = 0;
@@ -43,21 +40,28 @@ void print_multiple_instr(t_list **current, char *instr1, char *instr2, char *in
 		print_instr(instr2);
 }
 
-int is_cancelable(t_list *current)
+int	is_cancelable(t_list *current)
 {
-	if (!current || !current->next || !current->content || !current->next->content)
+	if (!current || !current->next || !current->content
+		|| !current->next->content)
 		return (0);
-	if ((!ft_strncmp((char *)current->content, "pa", 3) && !ft_strncmp((char *)current->next->content, "pb", 3)) ||
-		(!ft_strncmp((char *)current->content, "pb", 3) && !ft_strncmp((char *)current->next->content, "pa", 3)) ||
-		(!ft_strncmp((char *)current->content, "ra", 3) && !ft_strncmp((char *)current->next->content, "rra", 4)) ||
-		(!ft_strncmp((char *)current->content, "rb", 3) && !ft_strncmp((char *)current->next->content, "rrb", 4)) ||
-		(!ft_strncmp((char *)current->content, "rra", 4) && !ft_strncmp((char *)current->next->content, "ra", 3)) ||
-		(!ft_strncmp((char *)current->content, "rrb", 4) && !ft_strncmp((char *)current->next->content, "rb", 3)))
+	if ((!ft_strncmp((char *)current->content, "pa", 3)
+			&& !ft_strncmp((char *)current->next->content, "pb", 3))
+		|| (!ft_strncmp((char *)current->content, "pb", 3)
+			&& !ft_strncmp((char *)current->next->content, "pa", 3))
+		|| (!ft_strncmp((char *)current->content, "ra", 3)
+			&& !ft_strncmp((char *)current->next->content, "rra", 4))
+		|| (!ft_strncmp((char *)current->content, "rb", 3)
+			&& !ft_strncmp((char *)current->next->content, "rrb", 4))
+		|| (!ft_strncmp((char *)current->content, "rra", 4)
+			&& !ft_strncmp((char *)current->next->content, "ra", 3))
+		|| (!ft_strncmp((char *)current->content, "rrb", 4)
+			&& !ft_strncmp((char *)current->next->content, "rb", 3)))
 		return (1);
 	return (0);
 }
 
-static int	check_swap_optim(t_list **current)
+int	check_swap_optim(t_list **current)
 {
 	char	*s1;
 	char	*s2;
@@ -70,27 +74,25 @@ static int	check_swap_optim(t_list **current)
 	s3 = (char *)(*current)->next->next->content;
 	if (s1 && s2 && s3)
 	{
-		if (!ft_strncmp(s1, "ra", 3) && !ft_strncmp(s2, "pb", 3) && !ft_strncmp(s3, "rra", 4))
+		if (!ft_strncmp(s1, "ra", 3) && !ft_strncmp(s2, "pb", 3)
+			&& !ft_strncmp(s3, "rra", 4))
 		{
-			print_instr("sa");
-			print_instr("pb");
 			*current = (*current)->next->next->next;
-			return (1);
+			return (print_instr("sa"), print_instr("pb"), 1);
 		}
-		if (!ft_strncmp(s1, "rb", 3) && !ft_strncmp(s2, "pa", 3) && !ft_strncmp(s3, "rrb", 4))
+		if (!ft_strncmp(s1, "rb", 3) && !ft_strncmp(s2, "pa", 3)
+			&& !ft_strncmp(s3, "rrb", 4))
 		{
-			print_instr("sb");
-			print_instr("pa");
 			*current = (*current)->next->next->next;
-			return (1);
+			return (print_instr("sb"), print_instr("pa"), 1);
 		}
 	}
 	return (0);
 }
 
-void print_list(t_list *instructions)
+void	print_list(t_list *instructions)
 {
-	t_list *current;
+	t_list	*current;
 
 	current = instructions;
 	while (current)
@@ -99,9 +101,13 @@ void print_list(t_list *instructions)
 			continue ;
 		if (is_cancelable(current))
 			current = current->next->next;
-		else if (current->content && (!ft_strncmp((char *)current->content, "ra", 3) || !ft_strncmp((char *)current->content, "rb", 3)))
+		else if (current->content && (!ft_strncmp((char *)current->content,
+					"ra", 3) || !ft_strncmp((char *)current->content, "rb",
+					3)))
 			print_multiple_instr(&current, "ra", "rb", "rr");
-		else if (current->content && (!ft_strncmp((char *)current->content, "rra", 4) || !ft_strncmp((char *)current->content, "rrb", 4)))
+		else if (current->content && (!ft_strncmp((char *)current->content,
+					"rra", 4) || !ft_strncmp((char *)current->content, "rrb",
+					4)))
 			print_multiple_instr(&current, "rra", "rrb", "rrr");
 		else
 		{
@@ -112,12 +118,14 @@ void print_list(t_list *instructions)
 	}
 }
 
-void add_instruction(t_list **instructions, char *instr)
+void	add_instruction(t_list **instructions, char *instr)
 {
-	t_list *new;
-	t_list *tmp;
-	char *content;
+	t_list	*new;
+	t_list	*tmp;
+	char	*content;
 
+	if (!instructions)
+		return ;
 	new = malloc(sizeof(t_list));
 	if (!new)
 		return ;
@@ -127,8 +135,7 @@ void add_instruction(t_list **instructions, char *instr)
 		free(new);
 		return ;
 	}
-	new->content = content;
-	new->next = NULL;
+	(1 && (new->content = content), (new->next = NULL));
 	if (!*instructions)
 		*instructions = new;
 	else

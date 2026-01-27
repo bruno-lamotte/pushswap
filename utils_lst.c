@@ -6,7 +6,7 @@
 /*   By: blamotte <blamotte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/15 00:50:34 by blamotte          #+#    #+#             */
-/*   Updated: 2025/12/15 05:10:02 by blamotte         ###   ########.fr       */
+/*   Updated: 2026/01/27 03:27:51 by blamotte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,4 +65,32 @@ int	get_stack_size(t_stack *stack)
 			break ;
 	}
 	return (count);
+}
+
+void	set_index(t_stack *stack_a)
+{
+	t_stack	*current;
+	t_stack	*compare;
+	int		count;
+
+	if (!stack_a)
+		return ;
+	current = stack_a;
+	while (1)
+	{
+		count = 0;
+		compare = stack_a;
+		while (1)
+		{
+			if (compare->value < current->value)
+				count++;
+			compare = compare->next;
+			if (compare == stack_a)
+				break ;
+		}
+		current->index = count;
+		current = current->next;
+		if (current == stack_a)
+			break ;
+	}
 }

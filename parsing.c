@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: blamotte <blamotte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/12 16:15:02 by blamotte          #+#    #+#             */
-/*   Updated: 2026/01/04 23:43:55 by marvin           ###   ########.fr       */
+/*   Updated: 2026/01/27 03:27:35 by blamotte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	isvalid(char *arg)
 {
-	if (!arg)
+	if (!arg || !*arg)
 		return (0);
 	while (*arg)
 	{
@@ -46,50 +46,22 @@ int	is_int_limits(char *arg)
 	return (1);
 }
 
-void	set_index(t_stack *stack_a)
+int	isdouble(t_stack *a, long nb)
 {
-	t_stack	*current;
-	t_stack	*compare;
-	int		count;
+	t_stack	*tmp;
 
-	if (!stack_a)
-		return ;
-	current = stack_a;
+	if (!a)
+		return (0);
+	tmp = a;
 	while (1)
 	{
-		count = 0;
-		compare = stack_a;
-		while (1)
-		{
-			if (compare->value < current->value)
-				count++;
-			compare = compare->next;
-			if (compare == stack_a)
-				break ;
-		}
-		current->index = count;
-		current = current->next;
-		if (current == stack_a)
+		if (tmp->value == nb)
+			return (1);
+		tmp = tmp->next;
+		if (tmp == a)
 			break ;
 	}
-}
-
-int isdouble(t_stack *a, long nb)
-{
-    t_stack *tmp;
-
-    if (!a)
-        return (0);
-    tmp = a;
-    while (1)
-    {
-        if (tmp->value == nb)
-            return (1);
-        tmp = tmp->next;
-        if (tmp == a)
-            break ;
-    }
-    return (0);
+	return (0);
 }
 
 int	parsing(char **av, t_stack **a)
@@ -112,4 +84,33 @@ int	parsing(char **av, t_stack **a)
 	}
 	set_index(*a);
 	return (1);
+}
+
+char	**get_args(int ac, char **av)
+{
+	char	*tmp;
+	char	*joined;
+
+	if (ac == 2)
+		return (ft_split(av[1], ' '));
+	joined = ft_strdup("");
+	while (*(++av) && joined)
+	{
+		if (!**av)
+			return (free(joined), NULL);
+		tmp = joined;
+		joined = ft_strjoin(tmp, *av);
+		free(tmp);
+		if (!joined)
+			return (NULL);
+		tmp = joined;
+		joined = ft_strjoin(tmp, " ");
+		free(tmp);
+	}
+	if (!joined)
+		return (NULL);
+	tmp = joined;
+	av = ft_split(tmp, ' ');
+	free(tmp);
+	return (av);
 }
