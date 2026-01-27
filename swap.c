@@ -6,7 +6,7 @@
 /*   By: blamotte <blamotte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/15 03:05:53 by blamotte          #+#    #+#             */
-/*   Updated: 2026/01/06 07:57:02 by blamotte         ###   ########.fr       */
+/*   Updated: 2026/01/27 02:42:27 by blamotte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,18 +30,18 @@ void	swap(t_stack *stack)
 void	sa(t_stack **a, t_list **instructions)
 {
 	swap(*a);
-	ft_lstadd_back(instructions, ft_lstnew(ft_strdup("sa")));
+	add_instruction(instructions, "sa");
 }
 
 void	sb(t_stack **b, t_list **instructions)
 {
 	swap(*b);
-	ft_lstadd_back(instructions, ft_lstnew(ft_strdup("sb")));
+	add_instruction(instructions, "sb");
 }
 
 void	ss(t_stack **a, t_stack **b, t_list **instructions)
 {
 	swap(*a);
 	swap(*b);
-	ft_lstadd_back(instructions, ft_lstnew(ft_strdup("ss")));
+	add_instruction(instructions, "ss");
 }

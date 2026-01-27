@@ -6,7 +6,7 @@
 /*   By: blamotte <blamotte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/15 03:13:58 by blamotte          #+#    #+#             */
-/*   Updated: 2026/01/06 07:58:09 by blamotte         ###   ########.fr       */
+/*   Updated: 2026/01/27 02:42:25 by blamotte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ void	pa(t_stack **a, t_stack **b, t_list **instructions)
 	node = cut_node(b);
 	push_node(a, node);
 	if (instructions)
-		ft_lstadd_back(instructions, ft_lstnew(ft_strdup("pa")));
+		add_instruction(instructions, "pa");
 }
 
 void	pb(t_stack **a, t_stack **b, t_list **instructions)
@@ -73,5 +73,5 @@ void	pb(t_stack **a, t_stack **b, t_list **instructions)
 		return ;
 	node = cut_node(a);
 	push_node(b, node);
-	ft_lstadd_back(instructions, ft_lstnew(ft_strdup("pb")));
+	add_instruction(instructions, "pb");
 }

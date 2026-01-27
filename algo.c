@@ -14,16 +14,35 @@
 #define DEPTH 1
 #define CANDIDATES 1
 
-int adapt_chunk_size(int chunk_size, int initial_chunk, t_stack **a)
+t_stack	*copy_stack(t_stack *stack, int size)
 {
-    if (chunk_size > initial_chunk / 2 && chunk_size > get_stack_size(*a) / 5)
-        return (chunk_size * 6 / 7);
-    else if (chunk_size > 2)
-        return (--chunk_size);
-    return (chunk_size);
+	t_stack	*nstack;
+	t_stack	*current;
+	t_stack	*node;
+	int		i;
+
+	if (!stack)
+		return (NULL);
+	(1 && (nstack = NULL), (current = stack), (i = 0));
+	while (i++ < size)
+	{
+		node = malloc(sizeof(t_stack));
+		if (!node)
+			return (free_stack(&nstack), NULL);
+		(1 && (node->value = current->value), (node->index = current->index));
+		if (!nstack)
+			(1 && (nstack = node), (node->next = node), (node->prev = node));
+		else
+		{
+			(1 && (node->next = nstack), (node->prev = nstack->prev));
+			(1 && (nstack->prev->next = node), (nstack->prev = node));
+		}
+		current = current->next;
+	}
+	return (nstack);
 }
 
-void k_sorting(t_stack **a, t_stack **b, t_list **instructions, int size)
+int	evaluate_branch(t_stack *a, t_stack *b, int depth, int size)
 {
 	int chunk_size;
 	int initial_chunk;
@@ -187,33 +206,30 @@ void	apply_move(t_stack **a, t_stack **b, int cost_a, int cost_b, t_list **inst)
     finish_b_and_push(cost_b, a, b, inst);
 }
 
-t_stack *copy_stack(t_stack *stack, int size)
+void	reintegrate(t_stack **a, t_stack **b, t_list **instructions, int size)
 {
-    t_stack *new_stack;
-    t_stack *current;
-    t_stack *new_node;
-    int i;
-    
-    if (!stack)
-        return (NULL);
-    (1 && (new_stack = NULL), (current = stack), (i = 0));
-    while (i < size)
-    {
-        new_node = malloc(sizeof(t_stack));
-        if (!new_node)
-            return (NULL);
-        (1 && (new_node->value = current->value), (new_node->index = current->index));
-        if (!new_stack)
-            (1 && (new_stack = new_node), (new_node->next = new_node), (new_node->prev = new_node));
-        else
-        {
-            (1 && (new_node->next = new_stack), (new_node->prev = new_stack->prev));
-            (1 && (new_stack->prev->next = new_node), (new_stack->prev = new_node));
-        }
-        current = current->next;
-        i++;
-    }
-    return (new_stack);
+	t_mouv	mouvs[CANDIDATES];
+	t_eval	e;
+	int		best_idx;
+
+	if (!*b)
+		return ;
+	get_best_mouvs(*a, *b, mouvs, size);
+	(1 && (best_idx = 0), (e.best = 2147483647), (e.i = 0));
+	while (e.i < CANDIDATES && mouvs[e.i].total_cost != 2147483647)
+	{
+		e.temp_a = copy_stack(*a, get_stack_size(*a));
+		e.temp_b = copy_stack(*b, size);
+		mouv_up_in_b(mouvs[e.i].cost_b, &e.temp_a, &e.temp_b, NULL);
+		e.total = mouvs[e.i].total_cost + evaluate_branch(e.temp_a, e.temp_b,
+				DEPTH, size - 1);
+		if (e.total < e.best)
+			(1 && (e.best = e.total), (best_idx = e.i));
+		free_stack(&e.temp_a);
+		free_stack(&e.temp_b);
+		e.i++;
+	}
+	mouv_up_in_b(mouvs[best_idx].cost_b, a, b, instructions);
 }
 
 void	keep_bests_mouvs(int t_cost, int cost_a, int cost_b, t_mouv *mouvs)
@@ -241,7 +257,7 @@ void	keep_bests_mouvs(int t_cost, int cost_a, int cost_b, t_mouv *mouvs)
 	}
 }
 
-void    inititalize_mouvs(t_mouv *mouvs)
+void	algo(t_stack **a, t_stack **b, t_list **instructions)
 {
     int i;
 
