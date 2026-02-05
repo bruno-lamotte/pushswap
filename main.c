@@ -6,7 +6,7 @@
 /*   By: blamotte <blamotte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/12 17:22:33 by blamotte          #+#    #+#             */
-/*   Updated: 2026/01/27 03:20:35 by blamotte         ###   ########.fr       */
+/*   Updated: 2026/02/05 16:34:01 by blamotte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,8 @@ void	push_swap(t_stack **a)
 	else if (size <= 5)
 		sort_five(a, &b, &instructions);
 	else
-		algo(a, &b, &instructions);
+		if (!is_sorted(*a))
+			algo(a, &b, &instructions);
 	free_stack(&b);
 	print_list(instructions);
 	free_list(instructions);
