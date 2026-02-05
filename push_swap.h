@@ -6,7 +6,7 @@
 /*   By: blamotte <blamotte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/13 23:25:24 by blamotte          #+#    #+#             */
-/*   Updated: 2026/01/27 03:28:22 by blamotte         ###   ########.fr       */
+/*   Updated: 2026/02/05 16:27:57 by blamotte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ typedef struct s_eval
 	int				best;
 }					t_eval;
 
+int					is_sorted(t_stack *a);
 void				set_index(t_stack *stack_a);
 int					parsing(char **av, t_stack **a);
 t_stack				*ft_new_node(int value);

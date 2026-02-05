@@ -6,27 +6,11 @@
 /*   By: blamotte <blamotte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/27 03:15:00 by blamotte          #+#    #+#             */
-/*   Updated: 2026/01/27 03:51:12 by blamotte         ###   ########.fr       */
+/*   Updated: 2026/02/05 16:27:31 by blamotte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
-
-int	is_sorted(t_stack *a)
-{
-	t_stack	*tmp;
-
-	if (!a)
-		return (1);
-	tmp = a;
-	while (tmp->next != a)
-	{
-		if (tmp->value > tmp->next->value)
-			return (0);
-		tmp = tmp->next;
-	}
-	return (1);
-}
 
 int	exec_instr(char *line, t_stack **a, t_stack **b)
 {

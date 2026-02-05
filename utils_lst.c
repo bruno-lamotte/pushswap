@@ -6,11 +6,27 @@
 /*   By: blamotte <blamotte@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/15 00:50:34 by blamotte          #+#    #+#             */
-/*   Updated: 2026/01/27 03:27:51 by blamotte         ###   ########.fr       */
+/*   Updated: 2026/02/05 16:27:39 by blamotte         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
+
+int	is_sorted(t_stack *a)
+{
+	t_stack	*tmp;
+
+	if (!a)
+		return (1);
+	tmp = a;
+	while (tmp->next != a)
+	{
+		if (tmp->value > tmp->next->value)
+			return (0);
+		tmp = tmp->next;
+	}
+	return (1);
+}
 
 t_stack	*ft_new_node(int value)
 {
